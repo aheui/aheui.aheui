@@ -1,0 +1,16 @@
+[package]
+name = "ahah"
+version = "0.0.0"
+authors = []
+
+[[bin]]
+path = "proto.rs"
+name = "ahah"
+
+[dependencies]
+log = "*"
+env_logger = "*"
+
+[profile.dev]
+opt-level = 2
+

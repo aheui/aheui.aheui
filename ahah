@@ -1,0 +1,5 @@
+#!/bin/bash
+#[ -z "$1" ] && echo Usage: $0 '<file>' && exit 1
+cargo build >/dev/null 2>&1 || exit 2
+#cat "$1" <(echo; echo) - | $(dirname "$0")/target/debug/ahah
+$(dirname "$0")/target/debug/ahah
