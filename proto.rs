@@ -68,6 +68,7 @@ fn main() {
         if v < 0 {
             break;
         }
+        // 0xac00 = push8 push8 push8 push9 push9 mul push5 add mul mul mul (11)
         let v = v - 0xac00;
         if v < 0 {
             q.push_back(28); // 개 (the first no-op character)
@@ -171,13 +172,30 @@ fn main() {
     // for the convenience, we scale all coords by two (there is no odd one)
     let mut r = 0;
     let mut c = 0;
-    let mut dr = 2;
-    let mut dc = 0;
+    let mut dr = 4 + 2;
+    let mut dc = 4 + 0;
 
-    let mut v = q.pop_front().unwrap();
-    q.push_back(v);
+    // possible with dup then move
+    let mut v = *q.front().unwrap();
 
     loop {
+        info!("r: {} ({}), c: {} ({}), s: {} ({}), command: {} (op: {}, dir: {}, arg: {})",
+              r/2, (dr-4)/2, c/2, (dc-4)/2, s/2,
+              ["ㅇ","ㄱ","ㄴ","ㅅ","","ㄵ","ㄶ","ㄹ","ㅄ","ㄺ","ㄽ","ㄻ","ㄼ","ㄾ","ㄿ","ㅀ",
+               "ㄲ","ㄳ","ㅁ","ㅂ","ㅆ","ㅊ","ㅌ","ㅍ","ㄷ","ㅈ","ㅋ","ㅎ"][(s/2) as usize],
+              v,
+              ["","ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ",
+               "ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"][(v/21/28) as usize],
+              ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ",
+               "ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"][(v/28%21) as usize],
+//            ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ",
+//             "ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"][(v%28) as usize]);
+              ["ㅇ","ㄱ","ㄴ","ㅅ","","ㄵ","ㄶ","ㄹ","ㅄ","ㄺ","ㄽ","ㄻ","ㄼ","ㄾ","ㄿ","ㅀ",
+               "ㄲ","ㄳ","ㅁ","ㅂ","ㅆ","ㅊ","ㅌ","ㅍ","ㄷ","ㅈ","ㅋ","ㅎ"][(v%28) as usize]);
+        dump_stack!("stack");
+
+        // TODO stack verification
+
         // handle the case that this cell does exist
         if v != 0 {
             let z = v % 28;
@@ -185,35 +203,25 @@ fn main() {
             let y = xy % 21;
             let x = xy / 21;
 
-            info!("r: {} ({}), c: {} ({}), s: {} ({}), command: {} (op: {}, dir: {}, arg: {})",
-                  r/2, dr/2, c/2, dc/2, s/2,
-                  ["ㅇ","ㄱ","ㄴ","ㅅ","","ㄵ","ㄶ","ㄹ","ㅄ","ㄺ","ㄽ","ㄻ","ㄼ","ㄾ","ㄿ","ㅀ",
-                   "ㄲ","ㄳ","ㅁ","ㅂ","ㅆ","ㅊ","ㅌ","ㅍ","ㄷ","ㅈ","ㅋ","ㅎ"][(s/2) as usize],
-                  v,
-                  ["","ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ",
-                   "ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"][x as usize],
-                  ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ",
-                   "ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"][y as usize],
-//                ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ",
-//                 "ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"][z as usize]);
-                  ["ㅇ","ㄱ","ㄴ","ㅅ","","ㄵ","ㄶ","ㄹ","ㅄ","ㄺ","ㄽ","ㄻ","ㄼ","ㄾ","ㄿ","ㅀ",
-                   "ㄲ","ㄳ","ㅁ","ㅂ","ㅆ","ㅊ","ㅌ","ㅍ","ㄷ","ㅈ","ㅋ","ㅎ"][z as usize]);
-            dump_stack!("stack");
-
-            // TODO stack verification
-
             loop {
-                if y == 0 { dr = 0; dc = 2; break; }
-                if y == 2 { dr = 0; dc = 4; break; }
-                if y == 4 { dr = 0; dc = -2; break; }
-                if y == 6 { dr = 0; dc = -4; break; }
-                if y == 8 { dr = -2; dc = 0; break; }
-                if y == 12 { dr = -4; dc = 0; break; }
-                if y == 13 { dr = 2; dc = 0; break; }
-                if y == 17 { dr = 4; dc = 0; break; }
-                if y == 18 { dr = -dr; break; }
-                if y == 19 { dr = -dr; dc = -dc; break; }
-                if y == 20 { dc = -dc; break; }
+                if y < 8 {
+                    if y == 0 { dr = 4 + 0; dc = 4 + 2; break; }
+                    if y == 2 { dr = 4 + 0; dc = 4 + 4; break; }
+                    if y == 4 { dr = 4 + 0; dc = 4 - 2; break; }
+                    if y == 6 { dr = 4 + 0; dc = 4 - 4; break; }
+                    break;
+                }
+                let y = y - 8;
+                if y < 9 {
+                    if y == 0 { dr = 4 - 2; dc = 4 + 0; break; }
+                    if y == 4 { dr = 4 - 4; dc = 4 + 0; break; }
+                    if y == 5 { dr = 4 + 2; dc = 4 + 0; break; }
+                }
+                let y = y - 7;
+                if y == 2 { dr = 4 + 4; dc = 4 + 0; break; }
+                if y == 3 { dr = 8 - dr; break; }
+                if y == 4 { dr = 8 - dr; dc = 8 - dc; break; }
+                if y == 5 { dc = 8 - dc; break; }
                 break;
             }
 
@@ -393,7 +401,8 @@ fn main() {
                     }
                 }
 
-                if x == 19 { // ㅎ exit (x*)
+                let x = x - 11;
+                if x == 8 { // ㅎ exit (x*)
                     // switch to the empty stack and simulate the exit
                     let ex;
                     if nfin == 0 {
@@ -405,7 +414,7 @@ fn main() {
                     info!("exit code: {:?}", ex);
                     return;
                 }
-                if x == 11 { // ㅆ move (x)
+                if x == 0 { // ㅆ move (x)
                     if nfin != 0 { k = 2; break; }
 
                     let mut delta = z * 2 - s;
@@ -512,7 +521,7 @@ fn main() {
 
                     k = 0; break;
                 }
-                if x == 7 { // ㅁ pop (x)
+                if x == -4 { // ㅁ pop (x)
                     if nfin != 0 { k = 2; break; }
                     if z == 0 {
                         print!("{}", n);
@@ -521,15 +530,15 @@ fn main() {
                     }
                     k = 0; break;
                 }
-                if x == 15 { // ㅊ branch (x)
+                if x == 4 { // ㅊ branch (x)
                     if nfin != 0 { k = 2; break; }
                     if n == 0 {
-                        dr = -dr;
-                        dc = -dc;
+                        dr = 8 - dr;
+                        dc = 8 - dc;
                     }
                     k = 0; break;
                 }
-                if x == 9 { // ㅃ dup (x)
+                if x == -2 { // ㅃ dup (x)
                     if nfin != 0 { k = 2; break; }
                     // this differs from other commands that it has a knowledge about the storage
                     if s != 0 {
@@ -595,6 +604,7 @@ fn main() {
                     mfin = nfin;
                 }
 
+                let x = x + 11;
                 if x == 4 { // ㄷ add (x y)
                     if mfin != 0 { k = 2; break; }
                     h.push(m + n);
@@ -667,55 +677,38 @@ fn main() {
             }
 
             if k != 0 {
-                dr = -dr;
-                dc = -dc;
+                dr = 8 - dr;
+                dc = 8 - dc;
             }
         }
 
         // skip to the next instruction
         let fullseek;
 
-        if dr != 0 {
+        if dr != 4 {
             // up (and temporarily down)
-            assert!(dc == 0);
+            assert!(dc == 4);
 
             // skip through the last line while calculating the last line number
             let mut lastr = r;
-            let end_reached;
-            if v == 0 { // already read the EOL
-                // ** this branch and
-                let hasnext = q.pop_front().unwrap();
-                q.push_back(hasnext);
-                if hasnext != 0 {
-                    lastr += 2;
-                    end_reached = false;
-                } else {
-                    end_reached = true;
-                }
-            } else {
-                end_reached = false;
-            }
-            if !end_reached { // ** (this condition is redundant)
-                loop {
-                    // move to queue should move the front value into the back
-                    // combined with front-only dups, this is fairly cheap
-                    let w = q.pop_front().unwrap();
-                    q.push_back(w);
-                    if w == 0 {
-                        // ** this branch is same and should be merged
-                        let hasnext = q.pop_front().unwrap();
-                        q.push_back(hasnext);
-                        if hasnext != 0 {
-                            lastr += 2;
-                        } else {
-                            break;
-                        }
+            loop {
+                // move to queue should move the front value into the back
+                // combined with front-only dups, this is fairly cheap
+                let w = q.pop_front().unwrap();
+                q.push_back(w);
+                if w == 0 {
+                    let hasnext = q.pop_front().unwrap();
+                    q.push_back(hasnext);
+                    if hasnext != 0 {
+                        lastr += 2;
+                    } else {
+                        break;
                     }
                 }
             }
 
             // wrapping around
-            r += dr;
+            r += dr - 4;
             if r < 0 {
                 r = lastr;
             } else if r > lastr {
@@ -723,23 +716,20 @@ fn main() {
             }
 
             fullseek = 2;
-        } else if dc != 0 {
+        } else if dc != 4 {
             // left (and temporarily right)
-            assert!(dr == 0);
+            assert!(dr == 4);
 
             // skip until the next line
-            let mut lastc = c;
-            if v == 0 {
-                lastc -= 2;
-            } else {
-                loop {
-                    let w = q.pop_front().unwrap();
-                    q.push_back(w);
-                    if w != 0 {
-                        lastc += 2;
-                    } else {
-                        break;
-                    }
+            let mut lastc = c - 2; // since the next item includes v itself
+            assert_eq!(*q.front().unwrap(), v);
+            loop {
+                let w = q.pop_front().unwrap();
+                q.push_back(w);
+                if w != 0 {
+                    lastc += 2;
+                } else {
+                    break;
                 }
             }
 
@@ -761,7 +751,7 @@ fn main() {
             }
 
             // wrapping around
-            c += dc;
+            c += dc - 4;
             if c < 0 {
                 c = lastc;
             } else if c > lastc {
@@ -797,17 +787,18 @@ fn main() {
             // skip c-1 columns and set v
             let mut remainingc = c;
             loop {
-                let w = q.pop_front().unwrap();
-                q.push_back(w);
+                let w = *q.front().unwrap();
                 if w == 0 {
                     // EOL reached first, do not advance further
-                    v = 0;
+                    v = w;
                     break;
                 }
                 if remainingc == 0 {
                     v = w;
                     break;
                 }
+                q.pop_front();
+                q.push_back(w);
                 remainingc -= 2;
             }
         } else {
