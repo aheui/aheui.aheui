@@ -814,8 +814,19 @@ pushnum:		; z'
 
 	;; ㅅ 선택
 switch:			; v x
-	; TODO
-	halt
+	pop		; v
+	push 28		; v 28
+	mod		; z=v%28
+	push 2		; z 2
+	mul		; z*2
+	dup		; z*2 z*2
+	sel 19		; [S] s
+	dup		; [S] s s
+	mov 0		; [S] s
+	sel 0		; z*2 z*2 s
+	sub		; z*2 delta=z*2-s
+	mov 6		; z*2
+	jmp moving
 
 	;; ㅎ 끝냄
 exit:			; v {n _ | #} x
@@ -831,8 +842,27 @@ exit0:			; {n | } v
 
 	;; ㅆ 이동
 move:			; v {n _ | #} x
-	; TODO
-	halt
+	pop		; v {n _ | #}
+	brz move0	; v
+	jmp refl
+
+move0:			; v n
+	swap		; n v
+	push 28		; n v 28
+	mod		; n z=v%28
+	push -1		; n z -1
+	swap		; n -1 z
+	push 2		; n -1 z 2
+	mul		; n -1 z*2
+	sel 19		; [S] s
+	dup		; [S] s s
+	mov 0		; [S] s
+	sel 0		; n -1 z*2 s
+	sub		; n -1 delta=z*2-s
+	dup		; n -1 delta delta
+	mov 6		; n -1 delta
+	swap		; n delta -1
+	jmp moving
 
 	;; ㅁ 뽑기
 pop:			; v {n _ | #} x
@@ -956,6 +986,139 @@ swap:			; v {n m _ | #} x
 swap0:			; v n m
 	swap		; v m n
 	jmp push2front
+
+	;; ㅅ/ㅆ 공통 코드
+moving:			; {n delta -1 | 3 | 2*z}
+	sel 19		; [S] s
+	dup		; [S] s s
+	brz m_qarrange	; [S] s
+	sel 6		; [A] delta
+	jmp m_forward
+
+	; 큐 재정렬
+m_qarrange:		; [S] s
+	sel 6		; [A] delta
+	push 22222	; [A] delta #
+	sel 5		; [H] <...> {# {? _}* ? _ | #}
+m_qarrange0:		; [H] <...> {# {? _}* ? _ | #}
+	brz m_qarrange1	; [H] <...>
+	push 22222	; [H] <...> #
+	sel 8		; [T] <...> {# {? _}* ? _ | #}
+m_qarrange2:		; [T] <...> {# {? _}* ? _ | #}
+	brz m_qarrange3	; [T] <...>
+	sel 6		; [A] delta {# {? _}* ? _ | #}
+m_qarrange4:		; [A] delta {# {? _}* ? _ | #}
+	brz m_qarrange5	; [A] delta
+	jmp m_forward
+
+m_qarrange1:		; [H] <...> # {? _}* ?
+	mov 6		; [H] <...> # {? _}*
+	push 0		; [H] <...> # {? _}* _
+	mov 6		; [H] <...> # {? _}*
+	jmp m_qarrange0
+
+m_qarrange3:		; [T] <...> # {? _}* ?
+	mov 5		; [T] <...> # {? _}*
+	push 0		; [T] <...> # {? _}* _
+	mov 5		; [T] <...> # {? _}*
+	jmp m_qarrange2
+
+m_qarrange5:		; [A] delta # {? _}* ?
+	mov 5		; [A] delta # {? _}*
+	push 0		; [A] delta # {? _}* _
+	mov 5		; [A] delta # {? _}*
+	jmp m_qarrange4
+
+	; 앞으로 움직이기
+m_forward:		; [A] delta
+	dup		; [A] delta delta
+	push 0		; [A] delta delta 0
+	swap		; [A] delta 0 delta
+	cmp		; [A] delta 0>=delta
+	brz m_forward0	; [A] delta
+	jmp m_backward
+
+m_forward0:		; [A] delta
+	sel 5		; [H] <...>
+	push 22222	; [H] <...> #
+	sel 8		; [T] <...> {# {? _}* ? _ | #}
+m_forward1:		; [T] <...> {# {? _}* ? _ | #}
+	brz m_forward2	; [T] <...>
+	sel 6		; [A] delta
+	push 2		; [A] delta 2
+	sub		; [A] delta-2
+	jmp m_forward
+
+m_forward2:		; [T] <...> # {? _}* ?
+	mov 5		; [T] <...> # {? _}*
+	push 0		; [T] <...> # {? _}* _
+	mov 5		; [T] <...> # {? _}*
+	jmp m_forward1
+
+	; 뒤로 움직이기
+m_backward:		; [A] delta
+	dup		; [A] delta delta
+	push 0		; [A] delta delta 0
+	cmp		; [A] delta delta>=0
+	brz m_backward0	; [A] delta
+	jmp m_next
+
+m_backward0:		; [A] delta
+	sel 8		; [T] <...>
+	push 22222	; [T] <...> #
+	sel 5		; [H] <...> {# {? _}* ? _ | #}
+m_backward1:		; [H] <...> {# {? _}* ? _ | #}
+	brz m_backward2	; [H] <...>
+	sel 6		; [A] delta
+	push 2		; [A] delta 2
+	add		; [A] delta+2
+	jmp m_backward
+
+m_backward2:		; [H] <...> # {? _}* ?
+	mov 8		; [H] <...> # {? _}*
+	push 0		; [H] <...> # {? _}* _
+	mov 8		; [H] <...> # {? _}*
+	jmp m_backward1
+
+	; 상태 업데이트
+m_next:			; [A] delta
+	pop		; [A]
+	sel 0		; {n delta -1 | 3 | 2*z}
+	dup		; {n delta -1 -1 | 3 3 | 2*z 2*z}
+	push 0		; {n delta -1 -1 | 3 3 | 2*z 2*z} 0
+	cmp		; {n delta -1 0 | 3 1 | 2*z 1}
+	brz m_redo	; {3 | 2*z}
+	mov 19		;
+	sel 19		; [S] s
+	dup		; [S] s {3 3 | 2*z 2*z}
+	push 3		; [S] s {3 3 | 2*z 2*z} 3
+	sub		; [S] s {3 0 | 2*z 2*z-3}
+	brz m_skipupd	; [S] s 2*z
+	swap		; [S] 2*z s
+m_skipupd:		; [S] s' ?
+	pop		; [S] s'
+	dup		; [S] s' s'
+	brz m_qdone	; [S] s'
+	sel 0		;
+	jmp refl
+
+m_qdone:		; [S] s'
+	push 22222	; [S] s' #
+	mov 8		; [S] s'
+	sel 0		;
+	jmp refl
+
+m_redo:			; n delta -1
+	pop		; n delta
+	push 0		; n delta 0
+	swap		; n 0 delta
+	sub		; n -delta
+	mov 6		; n
+	mov 5		;
+	push 0		; 0
+	mov 5		;
+	push 3		; 3
+	jmp moving
 
 pop_rew:		; v
 	pop		;
@@ -1162,28 +1325,6 @@ seek_done:		; w rc
 	pop		; v=w
 	jmp loop
 
+	;; 끝
 
-
-	;; 임시
-dump:
-	sel 0
-temp:
-	brpop1 temp2
-	popnum
-	push 32
-	popchar
-	jmp temp
-temp2:
-	push 10
-	popchar
-	halt
-
-;  1(1) ㄱ = 상태 스택 (c r <-- top)
-;  4(2) ㄴ = 상태 스택 (dc dr <-- top)
-; 19(3) ㅅ = 상태 스택 (s <-- top)
-;  5(5) ㄵ = 에뮬레이션된 스택 머리
-;  6(6) ㄶ = 에뮬레이션된 스택 임시
-;  8(7) ㄹ = 에뮬레이션된 스택 꼬리
-; 21(0) ㅇ = 소스 코드 큐
-
-; vim: ts=8 sts=8 sw=8 noet
+;; vim: ts=8 sts=8 sw=8 noet
