@@ -1,9 +1,15 @@
 #!/bin/bash
 
-AHEUI=$(dirname "$0")/ahah
+case ${1} in
+    proto) AHEUI=$(dirname "$0")/ahah;;
+    asm) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheuis";;
+    *) echo "Usage: $0 {proto|asm} [testname ...]" >&1; exit 1
+esac
+
 git submodule init
 git submodule update
-if [ ${1} ]; then
+if [ ${2} ]; then
+    shift
     ds=snippets/${*}
 else
     ds=snippets/*/
