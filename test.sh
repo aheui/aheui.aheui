@@ -25,10 +25,10 @@ for d in $ds; do
         if [ -e "$d/$fbase".out ]; then
             if [ -e "$d/$fbase".in ]; then
                 #out=`$AHEUI $f < $d/$fbase.in`
-                out=`(sed 's/^$/ /g' $f; echo; echo; cat $d/$fbase.in) | $AHEUI`
+                out=`(cat $f <(echo -ne '\0') $d/$fbase.in) | $AHEUI`
             else
                 #out=`$AHEUI $f`
-                out=`sed 's/^$/ /g' $f | $AHEUI`
+                out=`$AHEUI <$f`
             fi
             exitcode=$?
             if [ -e "$d/$fbase".exitcode ]; then

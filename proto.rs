@@ -58,14 +58,11 @@ fn main() {
     loop {
         let mut v = getch!();
         if v == 10 {
-            v = getch!();
-            if v == 10 || v < 0 {
-                break;
-            }
             q.push_back(0);
             q.push_back(2);
+            continue;
         }
-        if v < 0 {
+        if v <= 0 { // allows NUL as a code-input separator
             break;
         }
         // 0xac00 = push8 push8 push8 push9 push9 mul push5 add mul mul mul (11)

@@ -1,5 +1,5 @@
 ; 아희아희 어셈 버전
-; 2015-03-25
+; 2015-03-26
 
 ;  0(4)    = 메인 애플리케이션 스택
 ;  1(1) ㄱ = [P] 상태 스택 (c r <-- top)
@@ -19,27 +19,27 @@ read:			;
 	brz r_newline	; v
 	dup		; v v
 	push 0		; v v 0
-	cmp		; v v>=0
-	brz r_end	; v
-	jmp r_letter
+	swap		; v 0 v
+	cmp		; v 0>=v
+	brz r_letter	; v
+
+	pop		;
+	push 0		; 0
+	mov 21		;
+	push 0		; 0
+	mov 21		;
+	push 2		; 2
+	mov 21		;
+	jmp setup
 
 	; 개행문자 처리
 r_newline:		; 10
 	pop		;
-	pushchar	; v
-	dup		; v v
-	dup		; v v v
-	push 10		; v v v 10
-	sub		; v v v-10
-	swap		; v v-10 v
-	push 0		; v v-10 v 0
-	cmp		; v v-10 v>=0
-	mul		; v (v-10)*(v>=0)
-	brz r_end	; v
 	push 0		; v 0
 	mov 21		; v
 	push 2		; v 2
 	mov 21		; v
+	jmp read
 
 r_letter:		; v
 	push 44032	; v 0xac00
@@ -224,17 +224,8 @@ r_add:			; v-0xac00 zdelta
 	mov 21		;
 	jmp read
 
-r_end:			; v
-	pop		;
-	push 0		; 0
-	mov 21		;
-	push 0		; 0
-	mov 21		;
-	push 2		; 2
-	mov 21		;
-
 	;; 셋업
-
+setup:
 	; 상태 스택
 	sel 1		; [P]
 	push 0		; [P] 0
@@ -819,6 +810,7 @@ pushchar:		; z'
 
 pushnum:		; z'
 	pushnum		; z' num
+	jmp push1back
 
 	;; ㅅ 선택
 switch:			; v x
@@ -851,7 +843,7 @@ pop:			; v {n _ | #} x
 pop0:			; v n
 	swap		; n v
 	push 28		; n v 28
-	mod		; n z=v/28
+	mod		; n z=v%28
 	dup		; n z z
 	brz popnum	; n z
 	push 27		; n z 27
