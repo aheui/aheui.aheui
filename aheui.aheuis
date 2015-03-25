@@ -10,6 +10,8 @@
 ;  8(7) ㄹ = [T] 에뮬레이션된 스택 꼬리
 ; 21(0) ㅇ = [Q] 소스 코드 큐
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	;; 소스 코드 읽어들이기
 read:			;
 	pushchar	; v
@@ -224,6 +226,8 @@ r_add:			; v-0xac00 zdelta
 	mov 21		;
 	jmp read
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	;; 셋업
 setup:
 	; 상태 스택
@@ -276,67 +280,69 @@ setup:
 	mov 0		; [Q] v <...>
 	sel 0		; v
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	;; 메인 루프
 loop:			; v
-jmp loop_nodump
+	jmp loop_nodump	; 이걸 주석처리하면 디버깅 출력
 
-; dump only
-; r c  dr dc  s  v
-sel 1
-dup
-push 2
-div
-popnum
-push 32
-popchar
-swap
-dup
-push 2
-div
-popnum
-push 32
-dup
-popchar
-popchar
-swap
+	; dump only
+	; r c  dr dc  s  v
+	sel 1
+	dup
+	push 2
+	div
+	popnum
+	push 32
+	popchar
+	swap
+	dup
+	push 2
+	div
+	popnum
+	push 32
+	dup
+	popchar
+	popchar
+	swap
 
-sel 4
-dup
-push 2
-div
-push 2
-sub
-popnum
-push 32
-popchar
-swap
-dup
-push 2
-div
-push 2
-sub
-popnum
-push 32
-dup
-popchar
-popchar
-swap
+	sel 4
+	dup
+	push 2
+	div
+	push 2
+	sub
+	popnum
+	push 32
+	popchar
+	swap
+	dup
+	push 2
+	div
+	push 2
+	sub
+	popnum
+	push 32
+	dup
+	popchar
+	popchar
+	swap
 
-sel 19
-dup
-push 2
-div
-popnum
-push 32
-dup
-popchar
-popchar
+	sel 19
+	dup
+	push 2
+	div
+	popnum
+	push 32
+	dup
+	popchar
+	popchar
 
-sel 0
-dup
-popnum
-push 10
-popchar
+	sel 0
+	dup
+	popnum
+	push 10
+	popchar
 
 loop_nodump:
 	dup		; v v
@@ -590,7 +596,6 @@ a1_ops:			; v {n x _ | x #}
 	swap		; v {n x _ | x #}
 	brz a2_try	; v x
 	push 22222	; v x #
-	swap		; v # x
 	jmp a2_ops
 
 a2_try:			; v n x
@@ -602,7 +607,7 @@ a2_retry:		; [H/T] <...> # {? _}*
 	brz a2_ok	; [H/T] <...>
 	sel 0		; v n x
 	swap		; v x n
-	mov 19		; v x
+	mov 5		; v x
 	sel 5		; [H/T] <...> n
 	push 22222	; [H/T] <...> n #
 	swap		; [H/T] <...> # n
@@ -666,6 +671,8 @@ a2_ops:			; v {n m x _ | x #}
 	push 18		; v {n m _ | #} x x 18
 	sub		; v {n m _ | #} x x-18
 	brz swap	; v {n m _ | #} x
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	; 없는 명령
 	pop		; v {n m _ | #}
@@ -987,6 +994,8 @@ swap0:			; v n m
 	swap		; v m n
 	jmp push2front
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	;; ㅅ/ㅆ 공통 코드
 moving:			; {n delta -1 | 3 | 2*z}
 	sel 19		; [S] s
@@ -1089,7 +1098,7 @@ m_next:			; [A] delta
 	cmp		; {n delta -1 0 | 3 1 | 2*z 1}
 	brz m_redo	; {3 | 2*z}
 	mov 19		;
-	sel 19		; [S] s
+	sel 19		; [S] s {3 | 2*z}
 	dup		; [S] s {3 3 | 2*z 2*z}
 	push 3		; [S] s {3 3 | 2*z 2*z} 3
 	sub		; [S] s {3 0 | 2*z 2*z-3}
@@ -1119,6 +1128,8 @@ m_redo:			; n delta -1
 	mov 5		;
 	push 3		; 3
 	jmp moving
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 pop_rew:		; v
 	pop		;
@@ -1325,6 +1336,8 @@ seek_done:		; w rc
 	pop		; v=w
 	jmp loop
 
-	;; 끝
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; 끝
 
 ;; vim: ts=8 sts=8 sw=8 noet
