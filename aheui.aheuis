@@ -16,7 +16,9 @@
 read:			;
 	pushchar	; v
 	dup		; v v
-	push 10		; v v 10
+	push 2
+	push 5
+	mul		; v v 10
 	sub		; v v-10
 	brz r_newline	; v
 	dup		; v v
@@ -44,28 +46,50 @@ r_newline:		; 10
 	jmp read
 
 r_letter:		; v
-	push 44032	; v 0xac00
+	push 8
+	push 8
+	push 8
+	push 9
+	push 9
+	mul
+	push 5
+	add
+	mul
+	mul
+	mul		; v 0xac00
 	sub		; v-0xac00
 	dup		; v-0xac00 v-0xac00
 	push 0		; v-0xac00 v-0xac00 0
 	cmp		; v-0xac00 v>=0xac00
 	brz r_nonhan	; v-0xac00
 	dup		; v-0xac00 v-0xac00
-	push 11172	; v-0xac00 v-0xac00 11172
+	push 8
+	push 5
+	mul
+	dup
+	mul
+	push 4
+	sub
+	push 7
+	mul		; v-0xac00 v-0xac00 11172
 	cmp		; v-0xac00 v>=0xd7a4
 	brz r_han	; v-0xac00
 	jmp r_nonhan
 
 r_nonhan:		; v-0xac00
 	pop		;
-	push 28		; 28
+	push 4
+	push 7
+	mul		; 28
 	mov 21		;
 	jmp read
 
 	; 한글 받침 리매핑
 r_han:			; v-0xac00
 	dup		; v-0xac00 v-0xac00
-	push 28		; v-0xac00 v-0xac00 28
+	push 4
+	push 7
+	mul		; v-0xac00 v-0xac00 28
 	mod		; v-0xac00 z=(v-0xac00)%28
 	dup		; v-0xac00 z z
 	push 9		; v-0xac00 z z 9
@@ -181,46 +205,74 @@ r_delta4:		; v-0xac00 z*
 
 r_delta14:		; v-0xac00 z*
 	pop		; v-0xac00
-	push 14		; v-0xac00 14
+	push 2
+	push 7
+	mul		; v-0xac00 14
 	jmp r_add
 
 r_delta17:		; v-0xac00 z*
 	pop		; v-0xac00
-	push 17		; v-0xac00 17
+	push 8
+	push 9
+	add		; v-0xac00 17
 	jmp r_add
 
 r_deltam1:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -1		; v-0xac00 -1
+	push 2
+	push 3
+	sub		; v-0xac00 -1
 	jmp r_add
 
 r_deltam2:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -2		; v-0xac00 -2
+	push 0
+	push 2
+	sub		; v-0xac00 -2
 	jmp r_add
 
 r_deltam3:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -3		; v-0xac00 -3
+	push 0
+	push 3
+	sub		; v-0xac00 -3
 	jmp r_add
 
 r_deltam10:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -10	; v-0xac00 -10
+	push 0
+	push 2
+	push 5
+	mul
+	sub		; v-0xac00 -10
 	jmp r_add
 
 r_deltam16:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -16	; v-0xac00 -16
+	push 0
+	push 4
+	push 4
+	mul
+	sub		; v-0xac00 -16
 	jmp r_add
 
 r_deltam21:		; v-0xac00 z*
 	pop		; v-0xac00
-	push -21	; v-0xac00 -21
+	push 0
+	push 3
+	push 7
+	mul
+	sub		; v-0xac00 -21
 	jmp r_add
 
 r_add:			; v-0xac00 zdelta
-	push 588	; v-0xac00 zdelta 588
+	push 3
+	push 4
+	push 7
+	push 7
+	mul
+	mul
+	mul		; v-0xac00 zdelta 588
 	add		; v-0xac00 zdelta+588
 	add		; v-0xac00+zdelta+588
 	mov 21		;
@@ -242,37 +294,37 @@ setup:
 
 	; 꼬리 스택
 	sel 8		; [T]
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222	; [T] #*23
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2		; [T] #*23
 
 	; 머리 스택
 	sel 5		; [H]
-	push 22222
-	push 22222
-	push 22222
-	push 22222
-	push 22222	; [H] #*5
+	push 2
+	push 2
+	push 2
+	push 2
+	push 2		; [H] #*5
 
 	; 첫 명령
 	sel 21		; [Q] v <...>
@@ -367,10 +419,14 @@ loop_nodump:
 	dup		; v v
 	brz pop_rew	; v
 	dup		; v v
-	push 28		; v v 28
+	push 4
+	push 7
+	mul		; v v 28
 	div		; v v/28
 	dup		; v v/28 v/28
-	push 21		; v v/28 v/28 21
+	push 3
+	push 7
+	mul		; v v/28 v/28 21
 	mod		; v v/28 y=v/28%21
 	mov 4		; v v/28
 	sel 4		; [D] dc dr y
@@ -530,13 +586,17 @@ d_hwall2:		; [D] dc dr
 
 d_end:			; [D] dc dr
 	sel 0		; v v/28
-	push 21		; v v/28 21
+	push 3
+	push 7
+	mul		; v v/28 21
 	div		; v x=v/588
 
 	; 인자 없는 명령
 	dup		; v x x
 	dup		; v x x x
-	push 12		; v x x x 12
+	push 3
+	push 4
+	mul		; v x x x 12
 	sub		; v x x x-12
 	mul		; v x x*(x-12)
 	brz nop		; v x
@@ -545,7 +605,9 @@ d_end:			; [D] dc dr
 	sub		; v x x-8
 	brz push	; v x
 	dup		; v x x
-	push 10		; v x x 10
+	push 2
+	push 5
+	mul		; v x x 10
 	sub		; v x x-10
 	brz switch	; v x
 
@@ -556,9 +618,9 @@ d_end:			; [D] dc dr
 	sel 5		; [H] <...> # {? _}*
 a1_retry:		; [H/T] <...> # {? _}*
 	brz a1_ok	; [H/T] <...>
-	push 22222	; [H/T] <...> #
+	push 2		; [H/T] <...> #
 	sel 0		; v x
-	push 22222	; v x #
+	push 2		; v x #
 	jmp a1_ops
 
 a1_ok:			; [H/T] <...> # {? _}* n
@@ -571,11 +633,11 @@ a1_ok:			; [H/T] <...> # {? _}* n
 a1_queue:		; [S] s
 	sel 8		; [T] <...> # {? _}*
 	brz a1_ok	; [T] <...>
-	push 22222	; [T] <...> #
+	push 2		; [T] <...> #
 	sel 5		; [H] <...> # {? _}*
 a1_qarrange:		; [H] <...> # {? _}*
 	brz a1_qnext	; [H] <...>
-	push 22222	; [H] <...> #
+	push 2		; [H] <...> #
 	sel 8		; [T] <...> # {? _}*
 	jmp a1_retry
 
@@ -588,7 +650,9 @@ a1_qnext:		; [H] <...> # {? _}* ?
 	; 인자가 하나인 명령
 a1_ops:			; v {n x _ | x #}
 	swap		; v {n _ | #} x
-	push 11		; v {n _ | #} x 11
+	push 4
+	push 7
+	add		; v {n _ | #} x 11
 	sub		; v {n _ | #} x-11
 	dup		; v {n _ | #} x-11 x-11
 	push 8		; v {n _ | #} x-11 x-11 8
@@ -608,13 +672,15 @@ a1_ops:			; v {n x _ | x #}
 	push 2		; v {n _ | #} x-11 x-11 2
 	add		; v {n _ | #} x-11 x-9
 	brz dup		; v {n _ | #} x-11
-	push 11		; v {n _ | #} x-11 11
+	push 4
+	push 7
+	add		; v {n _ | #} x-11 11
 	add		; v {n _ | #} x
 
 	; 두번째 인자
 	swap		; v {n x _ | x #}
 	brz a2_try	; v x
-	push 22222	; v x #
+	push 2		; v x #
 	jmp a2_ops
 
 a2_try:			; v n x
@@ -639,11 +705,11 @@ a2_ok:			; [H/T] <...> # {? _}* m
 a2_queue:		; [S] s
 	sel 8		; [T] <...> # {? _}*
 	brz a2_ok	; [T] <...>
-	push 22222	; [T] <...> #
+	push 2		; [T] <...> #
 	sel 5		; [H] <...> # {? _}*
 a2_qarrange:		; [H] <...> # {? _}*
 	brz a2_qnext	; [H] <...>
-	push 22222	; [H] <...> #
+	push 2		; [H] <...> #
 	sel 8		; [T] <...> # {? _}*
 	brz a2_ok	; [T] <...>
 	sel 0		; v n x
@@ -652,11 +718,11 @@ a2_qarrange:		; [H] <...> # {? _}*
 	sel 8		; [T] <...> n
 
 a2_cleanup:		; [H/T] <...> n
-	push 22222	; [H/T] <...> n #
+	push 2		; [H/T] <...> n #
 	swap		; [H/T] <...> # n
 	push 0		; [H/T] <...> # n _
 	sel 0		; v x
-	push 22222	; v x #
+	push 2		; v x #
 	jmp a2_ops
 
 a2_qnext:		; [H] <...> # {? _}* ?
@@ -673,7 +739,9 @@ a2_ops:			; v {n m x _ | x #}
 	sub		; v {n m _ | #} x x-4
 	brz add		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
-	push 13		; v {n m _ | #} x x 13
+	push 6
+	push 7
+	add		; v {n m _ | #} x x 13
 	sub		; v {n m _ | #} x x-13
 	brz cmp		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
@@ -689,11 +757,15 @@ a2_ops:			; v {n m x _ | x #}
 	sub		; v {n m _ | #} x x-6
 	brz mod		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
-	push 17		; v {n m _ | #} x x 17
+	push 8
+	push 9
+	add		; v {n m _ | #} x x 17
 	sub		; v {n m _ | #} x x-17
 	brz sub		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
-	push 18		; v {n m _ | #} x x 18
+	push 3
+	push 6
+	mul		; v {n m _ | #} x x 18
 	sub		; v {n m _ | #} x x-18
 	brz swap	; v {n m _ | #} x
 
@@ -747,7 +819,9 @@ nop:			; v x
 	;; ㅂ 집어넣기
 push:			; v x
 	pop		; v
-	push 28		; v 28
+	push 4
+	push 7
+	mul		; v 28
 	mod		; z=v%28
 	dup		; z z
 	push 9		; z z 9
@@ -847,7 +921,9 @@ pushnum:		; z'
 	;; ㅅ 선택
 switch:			; v x
 	pop		; v
-	push 28		; v 28
+	push 4
+	push 7
+	mul		; v 28
 	mod		; z=v%28
 	push 2		; z 2
 	mul		; z*2
@@ -880,9 +956,13 @@ move:			; v {n _ | #} x
 
 move0:			; v n
 	swap		; n v
-	push 28		; n v 28
+	push 4
+	push 7
+	mul		; n v 28
 	mod		; n z=v%28
-	push -1		; n z -1
+	push 2
+	push 3
+	sub		; n z -1
 	swap		; n -1 z
 	push 2		; n -1 z 2
 	mul		; n -1 z*2
@@ -904,11 +984,15 @@ pop:			; v {n _ | #} x
 
 pop0:			; v n
 	swap		; n v
-	push 28		; n v 28
+	push 4
+	push 7
+	mul		; n v 28
 	mod		; n z=v%28
 	dup		; n z z
 	brz popnum	; n z
-	push 27		; n z 27
+	push 3
+	push 9
+	mul		; n z 27
 	sub		; n z-27
 	brz popchar	; n
 	pop		;
@@ -1032,11 +1116,11 @@ moving:			; {n delta -1 | 3 | 2*z}
 	; 큐 재정렬
 m_qarrange:		; [S] s
 	sel 6		; [A] delta
-	push 22222	; [A] delta #
+	push 2		; [A] delta #
 	sel 5		; [H] <...> {# {? _}* ? _ | #}
 m_qarrange0:		; [H] <...> {# {? _}* ? _ | #}
 	brz m_qarrange1	; [H] <...>
-	push 22222	; [H] <...> #
+	push 2		; [H] <...> #
 	sel 8		; [T] <...> {# {? _}* ? _ | #}
 m_qarrange2:		; [T] <...> {# {? _}* ? _ | #}
 	brz m_qarrange3	; [T] <...>
@@ -1074,7 +1158,7 @@ m_forward:		; [A] delta
 
 m_forward0:		; [A] delta
 	sel 5		; [H] <...>
-	push 22222	; [H] <...> #
+	push 2		; [H] <...> #
 	sel 8		; [T] <...> {# {? _}* ? _ | #}
 m_forward1:		; [T] <...> {# {? _}* ? _ | #}
 	brz m_forward2	; [T] <...>
@@ -1099,7 +1183,7 @@ m_backward:		; [A] delta
 
 m_backward0:		; [A] delta
 	sel 8		; [T] <...>
-	push 22222	; [T] <...> #
+	push 2		; [T] <...> #
 	sel 5		; [H] <...> {# {? _}* ? _ | #}
 m_backward1:		; [H] <...> {# {? _}* ? _ | #}
 	brz m_backward2	; [H] <...>
@@ -1137,7 +1221,7 @@ m_skipupd:		; [S] s' ?
 	jmp refl
 
 m_qdone:		; [S] s'
-	push 22222	; [S] s' #
+	push 2		; [S] s' #
 	mov 8		; [S] s'
 	sel 0		;
 	jmp refl
