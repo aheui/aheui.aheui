@@ -185,7 +185,9 @@ r_delta0:		; v-0xac00 z*
 
 r_delta1:		; v-0xac00 z*
 	pop		; v-0xac00
-	push 1		; v-0xac00 1
+	push 2
+	push 2
+	div		; v-0xac00 1
 	jmp r_add
 
 r_delta2:		; v-0xac00 z*
@@ -294,29 +296,20 @@ setup:
 
 	; 꼬리 스택
 	sel 8		; [T]
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2
-	push 2		; [T] #*23
+	push 6
+	push 8
+	mul		; [T] 48
+setup_tail:		; [T] #*(k/2-1) k
+	push 2		; [T] #*(k/2-1) k 2
+	sub		; [T] #*(k/2-1) k-2
+	dup		; [T] #*(k/2-1) k-2 k-2
+	brz setup_tail0	; [T] #*(k/2-1) k-2
+	push 2		; [T] #*(k/2-1) k-2 2
+	swap		; [T] #*(k/2) k-2
+	jmp setup_tail
+
+setup_tail0:		; [T] #*23 0
+	pop		; [T] #*23
 
 	; 머리 스택
 	sel 5		; [H]
