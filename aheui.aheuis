@@ -341,6 +341,25 @@ loop:			; v
 	sel 0
 	dup
 	popnum
+	push 32
+	dup
+	popchar
+	popchar
+
+	sel 5
+	dup
+	brz dump0
+	push 45
+	popchar
+	jmp dump1
+dump0:
+	swap
+	dup
+	popnum
+	swap
+dump1:
+
+	sel 0
 	push 10
 	popchar
 
@@ -560,7 +579,7 @@ a1_qarrange:		; [H] <...> # {? _}*
 	sel 8		; [T] <...> # {? _}*
 	jmp a1_retry
 
-a1_qnext:		; [H] <...> # {? _}* n'
+a1_qnext:		; [H] <...> # {? _}* ?
 	mov 8		; [H] <...> # {? _}*
 	push 0		; [H] <...> # {? _}* _
 	mov 8		; [H] <...> # {? _}*
@@ -603,18 +622,12 @@ a2_try:			; v n x
 	dup		; [S] s s
 	brz a2_queue	; [S] s
 	sel 5		; [H] <...> # {? _}*
-a2_retry:		; [H/T] <...> # {? _}*
-	brz a2_ok	; [H/T] <...>
+	brz a2_ok	; [H] <...>
 	sel 0		; v n x
 	swap		; v x n
 	mov 5		; v x
-	sel 5		; [H/T] <...> n
-	push 22222	; [H/T] <...> n #
-	swap		; [H/T] <...> # n
-	push 0		; [H/T] <...> # n _
-	sel 0		; v x
-	push 22222	; v x #
-	jmp a2_ops
+	sel 5		; [H] <...> n
+	jmp a2_cleanup
 
 a2_ok:			; [H/T] <...> # {? _}* m
 	mov 0		; [H/T] <...> # {? _}*
@@ -632,9 +645,21 @@ a2_qarrange:		; [H] <...> # {? _}*
 	brz a2_qnext	; [H] <...>
 	push 22222	; [H] <...> #
 	sel 8		; [T] <...> # {? _}*
-	jmp a2_retry
+	brz a2_ok	; [T] <...>
+	sel 0		; v n x
+	swap		; v x n
+	mov 8		; v x
+	sel 8		; [T] <...> n
 
-a2_qnext:		; [H] <...> # {? _}* m'
+a2_cleanup:		; [H/T] <...> n
+	push 22222	; [H/T] <...> n #
+	swap		; [H/T] <...> # n
+	push 0		; [H/T] <...> # n _
+	sel 0		; v x
+	push 22222	; v x #
+	jmp a2_ops
+
+a2_qnext:		; [H] <...> # {? _}* ?
 	mov 8		; [H] <...> # {? _}*
 	push 0		; [H] <...> # {? _}* _
 	mov 8		; [H] <...> # {? _}*
@@ -1127,7 +1152,8 @@ m_redo:			; n delta -1
 	push 0		; 0
 	mov 5		;
 	push 3		; 3
-	jmp moving
+	sel 4		; [A] -delta
+	jmp m_forward
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

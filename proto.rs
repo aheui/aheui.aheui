@@ -9,7 +9,7 @@ extern crate env_logger;
 use std::char;
 use std::io;
 use std::env;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::collections::VecDeque;
 
 fn main() {
@@ -56,7 +56,7 @@ fn main() {
     let mut q: VecDeque<i32> = VecDeque::new();
 
     loop {
-        let mut v = getch!();
+        let v = getch!();
         if v == 10 {
             q.push_back(0);
             q.push_back(2);
@@ -176,6 +176,11 @@ fn main() {
     let mut v = *q.front().unwrap();
 
     loop {
+        if false { // same trace format as asm
+            print!("{} {}  {} {}  {}  {}  ", r/2,c/2,dr/2-2,dc/2-2,s/2,v);
+            let zz = h.len(); if h[zz-1] == 0 { println!("{}", h[zz-2]); } else { println!("-"); }
+        }
+
         info!("r: {} ({}), c: {} ({}), s: {} ({}), command: {} (op: {}, dir: {}, arg: {})",
               r/2, (dr-4)/2, c/2, (dc-4)/2, s/2,
               ["ㅇ","ㄱ","ㄴ","ㅅ","","ㄵ","ㄶ","ㄹ","ㅄ","ㄺ","ㄽ","ㄻ","ㄼ","ㄾ","ㄿ","ㅀ",
@@ -522,8 +527,10 @@ fn main() {
                     if nfin != 0 { k = 2; break; }
                     if z == 0 {
                         print!("{}", n);
+                        io::stdout().flush().unwrap();
                     } else if z == 27 {
                         print!("{}", char::from_u32(n as u32).unwrap());
+                        io::stdout().flush().unwrap();
                     }
                     k = 0; break;
                 }
