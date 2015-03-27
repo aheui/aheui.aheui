@@ -284,6 +284,15 @@ r_add:			; v-0xac00 zdelta
 
 	;; 셋업
 setup:
+; temporary for verification
+sel 21
+brpop1 q
+popnum
+sel 0
+push 10
+popchar
+jmp setup
+q: halt
 	; 상태 스택
 	sel 1		; [P]
 	push 0		; [P] 0
@@ -299,13 +308,13 @@ setup:
 	push 6
 	push 8
 	mul		; [T] 48
-setup_tail:		; [T] #*(k/2-1) k
-	push 2		; [T] #*(k/2-1) k 2
-	sub		; [T] #*(k/2-1) k-2
-	dup		; [T] #*(k/2-1) k-2 k-2
-	brz setup_tail0	; [T] #*(k/2-1) k-2
-	push 2		; [T] #*(k/2-1) k-2 2
-	swap		; [T] #*(k/2) k-2
+setup_tail:		; [T] #*(24-k/2) k
+	push 2		; [T] #*(24-k/2) k 2
+	sub		; [T] #*(24-k/2) k-2
+	dup		; [T] #*(24-k/2) k-2 k-2
+	brz setup_tail0	; [T] #*(24-k/2) k-2
+	push 2		; [T] #*(24-k/2) k-2 2
+	swap		; [T] #*(25-k/2) k-2
 	jmp setup_tail
 
 setup_tail0:		; [T] #*23 0
