@@ -410,7 +410,14 @@ dump1:
 
 loop_nodump:
 	dup		; v v
-	brz pop_rew	; v
+	brz loop_zero	; v
+	jmp loop_zero0
+loop_zero:
+	pop		;
+	push 4
+	push 7
+	mul		; 28
+loop_zero0:
 	dup		; v v
 	push 4
 	push 7
@@ -1233,10 +1240,6 @@ m_redo:			; n delta -1
 	jmp m_forward
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-pop_rew:		; v
-	pop		;
-	jmp rew
 
 	;; 방향 뒤집기 (ㅊ, 빈 스택/큐)
 refl:			; {? | }
