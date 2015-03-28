@@ -1,97 +1,29 @@
-밯빠박발따투바푸마바쌍바쌍박쌍ㄴ샹희망사박발따뭏
-쏭벅썽버머차뽀자초ㄴㄴㄴㄴㄴㄴㄴ오어어어어어어어
-또두벌떠벎벎벓벓벓ㄴ    setup->
-됴따따따탸부뻐따뿌ㄴ
-뵭범머차뺘져밣볼뚜ㄴ
-됴뱕초뚜져떠벍터범ㄴ
-또봄뻐라빠밞쟈뿌차붊ㄴ
-또뿌처뮤져벅뻐처뮤타뿌ㄴ
-또밤쟈뮤차빠발주뷱버붊ㄴ
-볽벍마뷰챠뿌뿌쳐븀모쥬ㄴ
-볽밝뚜벽조벍밣쥬투벋밞타쀼ㄴ
-뱍뵴벋어여더여터여ㅇ초부머ㄴ
-뵴탸보오밣볾며차마뵥뿌뱍추뷸ㄴ
-묘처모져툐벅뇨벼뵤머차뿌뿌ㄴ
-뵫뵥버볽밤주뼈처무져븀볃북뜌ㄴ
-쀼처모뽀요쳐뵥묘벽마보챠저쀼ㄴ
-요조여어오여여여뗘여볌여버텨ㄴ
-뷹뿌자쳐주먀볌볻뼈토쳐저모볃ㄴ
-요뵶볼뻐처마바받밝또ㄴ
-쟈무차뿌ㄴ
-요벅주벎ㄴ
-보머처무ㄴ
-툐벋ㅇ벼ㄴ
-ㄴ
-ㄴ
+밯빠박발따투바푸마ㄴㄴ부삿붏
+쏭벅썽버머차뽀자초ㄴㄴ쑹봆술
+또두벌떠벎벎벓벓벓ㄴㄴ부봄붒
+됴따따따탸부뻐따뿌ㄴㄴ쑹손붏
+뵭범머차뺘져밣볼뚜ㄴㄴ부보뚜
+됴뱕초뚜져떠벍터범ㄴㄴ쌍숙박투
+또봄뻐라빠밞쟈뿌차붊ㄴㄴ뵤뱍쀼북
+또뿌처뮤져벅뻐처뮤타뿌ㄴㄴ표벅북
+또밤쟈뮤차빠발주뷱버붊ㄴㄴ뵥초북
+볽벍마뷰챠뿌뿌쳐븀모쥬ㄴㄴ솑머숭
+볽밝뚜벽조벍밣쥬투벋밞타쀼ㄴㄴ뿌
+뱍뵴벋어여더여터여ㅇ초부머ㄴㄴ쓔
+뵴탸보오밣볾며차마뵥뿌뱍추뷸ㄴㄴ
+묘처모져툐벅뇨벼뵤머차뿌뿌ㄴㄴ사아아아아아아아아아아아아우->loop
+뵫뵥버볽밤주뼈처무져븀볃북뜌ㄴㄴ모퍼
+쀼처모뽀요쳐뵥묘벽마보챠저쀼ㄴㄴ추추뼈
+요조여어오여여여뗘여볌여버텨ㄴㄴ푸아포
+뷹뿌자쳐주먀볌볻뼈토쳐저모볃ㄴㄴ무요뻐
+요뵶볼뻐처마바받밝또ㄴㄴ상썅텨뺘벽싸소
+쟈무차뿌ㄴㄴ튜벅처마삭파빠싸파송빠쑹챠썽뻐성써
+요벅주벎ㄴㄴ빠싸쳐상쑹싸수뼈쑤뻐순차사뱍송더뽀
+보머처무ㄴㄴ송뺘뾰쏘셔뮤ㅇ속슈토뿌빠쑹상쀼뎌속ㅇㅇ푸벓
+툐벋수벼수ㄴ삭포버숙처속져초저봄쑥오처우차수초터범튜포
+ㄴㄴ파먀쟈퍄초요머여펴벼셕썩보도석초썽뻐쏭뵥삭푸퍄벓토펴우           우처싹삭
+ㄴㄴ뺘셔쑈쎠샥뼈묘텨범더석퍼썩뻐퍼선샹써뽀텨벅뻐뾰선마손여<-refl     야조샥벼
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	;; 셋업
-setup:
-	; 상태 스택
-	숙		; [P]
-	부		; [P] 0
-	부		; [P] 0 0
-	순		; [D]
-	붐		; [D] 4
-	붒		; [D] 4 6
-	숫		; [S]
-	붏		; [S] 8
-
-	; 꼬리 스택
-	술		; [T]
-	붒
-	붏
-	뚜		; [T] 48
-setup_tail:		; [T] #*(k/2-1) k
-	북		; [T] #*(k/2-1) k 2
-	투		; [T] #*(k/2-1) k-2
-	뿌		; [T] #*(k/2-1) k-2 k-2
-	ㅊ setup_tail0	; [T] #*(k/2-1) k-2
-	북		; [T] #*(k/2-1) k-2 2
-	푸		; [T] #*(k/2) k-2
-	jmp setup_tail
-
-setup_tail0:		; [T] #*23 0
-	무		; [T] #*23
-
-	술		; [T]
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북
-	북		; [T] #*23
-
-	; 머리 스택
-	숝		; [H]
-	북
-	북
-	북
-	북
-	북		; [H] #*5
-
-	; 첫 명령
-	숭		; [Q] v <...>
-	뿌		; [Q] v v <...>
-	쑤		; [Q] v <...>
-	수		; v
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -99,197 +31,102 @@ setup_tail0:		; [T] #*23 0
 loop:			; v
 	뿌		; v v
 	ㅊ pop_rew	; v
-	뿌		; v v
-	붐
-	붉
-	뚜		; v v 28
-	누		; v v/28
-	뿌		; v v/28 v/28
-	붇
-	붉
-	뚜		; v v/28 v/28 21
-	루		; v v/28 y=v/28%21
-	쑨		; v v/28
-	순		; [D] dc dr y
+	뿌붐붉뚜누뿌붇붉뚜루쑨순
 
 	; 코드 실행 방향
-	뿌		; [D] dc dr y y
-	붏		; [D] dc dr y y 8
-	주		; [D] dc dr y y>=8
+	뿌 붏 주
 	ㅊ d_lt8	; [D] dc dr y
-	붏		; [D] dc dr y 8
-	투		; [D] dc dr y-8
-	뿌		; [D] dc dr y-8 y-8
-	붊		; [D] dc dr y-8 y-8 9
-	주		; [D] dc dr y-8 y>=17
+	붏 투 뿌 붊 주
 	ㅊ d_lt17	; [D] dc dr y-8
 
-	붉		; [D] dc dr y-8 7
-	투		; [D] dc dr y-15
-	뿌		; [D] dc dr y-15 y-15
-	북		; [D] dc dr y-15 y-15 2
-	투		; [D] dc dr y-15 y-17
+	붉 투 뿌 북 투
 	ㅊ d_down2	; [D] dc dr y-15
-	뿌		; [D] dc dr y-15 y-15
-	붇		; [D] dc dr y-15 y-15 3
-	투		; [D] dc dr y-15 y-18
+	뿌 붇 투
 	ㅊ d_vwall	; [D] dc dr y-15
-	뿌		; [D] dc dr y-15 y-15
-	붐		; [D] dc dr y-15 y-15 4
-	투		; [D] dc dr y-15 y-19
+	뿌 붐 투
 	ㅊ d_wall	; [D] dc dr y-15
-	뿌		; [D] dc dr y-15 y-15
-	불		; [D] dc dr y-15 y-15 5
-	투		; [D] dc dr y-15 y-20
+	뿌 불 투
 	ㅊ d_hwall	; [D] dc dr y-15
-	무		; [D] dc dr
+	무
 	jmp d_end
 
 d_lt8:			; [D] dc dr y
-	뿌		; [D] dc dr y y
+	뿌
 	ㅊ d_right	; [D] dc dr y
-	뿌		; [D] dc dr y y
-	북		; [D] dc dr y y 2
-	투		; [D] dc dr y y-2
+	뿌 북 투
 	ㅊ d_right2	; [D] dc dr y
-	뿌		; [D] dc dr y y
-	붐		; [D] dc dr y y 4
-	투		; [D] dc dr y y-4
+	뿌 붐 투
 	ㅊ d_left	; [D] dc dr y
-	뿌		; [D] dc dr y y
-	붒		; [D] dc dr y y 6
-	투		; [D] dc dr y y-6
+	뿌 붒 투
 	ㅊ d_left2	; [D] dc dr y
-	무		; [D] dc dr
+	무
 	jmp d_end
 
 d_lt17:
-	뿌		; [D] dc dr y-8 y-8
+	뿌
 	ㅊ d_up	; [D] dc dr y-8
-	뿌		; [D] dc dr y-8 y-8
-	붐		; [D] dc dr y-8 y-8 4
-	투		; [D] dc dr y-8 y-12
+	뿌 붐 투
 	ㅊ d_up2	; [D] dc dr y-8
-	뿌		; [D] dc dr y-8 y-8
-	불		; [D] dc dr y-8 y-8 5
-	투		; [D] dc dr y-8 y-13
+	뿌 불 투
 	ㅊ d_down	; [D] dc dr y-8
 	무		; [D] dc dr
 	jmp d_end
 
 d_left2:		; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	부		; [D] 0
-	붐		; [D] 0 4
+	무 무 무 부 붐
 	jmp d_end
 
 d_left:			; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	북		; [D] 2
-	붐		; [D] 2 4
+	무 무 무 북 붐
 	jmp d_end
 
 d_right:		; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붒		; [D] 6
-	붐		; [D] 6 4
+	무 무 무 붒 붐
 	jmp d_end
 
 d_right2:		; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붏		; [D] 8
-	붐		; [D] 8 4
+	무 무 무 붏 붐
 	jmp d_end
 
 d_up2:			; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붐		; [D] 4
-	부		; [D] 4 0
+	무 무 무 붐 부
 	jmp d_end
 
 d_up:			; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붐		; [D] 4
-	북		; [D] 4 2
+	무 무 무 붐 북
 	jmp d_end
 
 d_down:			; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붐		; [D] 4
-	붒		; [D] 4 6
+	무 무 무 붐 붒
 	jmp d_end
 
 d_down2:		; [D] dc dr y
-	무		; [D] dc dr
-	무		; [D] dc
-	무		; [D]
-	붐		; [D] 4
-	붏		; [D] 4 8
+	무 무 무 붐 붏
 	jmp d_end
 
 d_vwall:		; [D] dc dr y
-	무		; [D] dc dr
-	붏		; [D] dc dr 8
-	푸		; [D] dc 8 dr
-	투		; [D] dc 8-dr
+	무 붏 푸 투
 	jmp d_end
 
 d_wall:			; [D] dc dr y
-	무		; [D] dc dr
-	붏		; [D] dc dr 8
-	푸		; [D] dc 8 dr
-	투		; [D] dc 8-dr
+	무 붏 푸 투
 	jmp d_hwall2
 
 d_hwall:		; [D] dc dr y
 	무		; [D] dc dr
 d_hwall2:		; [D] dc dr
-	푸		; [D] dr dc
-	붏		; [D] dr dc 8
-	푸		; [D] dr 8 dc
-	투		; [D] dr 8-dc
-	푸		; [D] 8-dc dr
+	푸 붏 푸 투 푸
 	jmp d_end
 
 d_end:			; [D] dc dr
-	수		; v v/28
-	붇
-	붉
-	뚜		; v v/28 21
-	누		; v x=v/588
+	수 붇 붉 뚜 누
 
 	; 인자 없는 명령
-	뿌		; v x x
-	뿌		; v x x x
-	붇
-	붐
-	뚜		; v x x x 12
-	투		; v x x x-12
-	뚜		; v x x*(x-12)
+	뿌 뿌 붇 붐 뚜 투 뚜
 	ㅊ nop		; v x
-	뿌		; v x x
-	붏		; v x x 8
-	투		; v x x-8
+	뿌 붏 투
 	ㅊ push	; v x
-	뿌		; v x x
-	북
-	불
-	뚜		; v x x 10
-	투		; v x x-10
+	뿌 북 불 뚜 투
 	ㅊ switch	; v x
 
 	; 첫번째 인자
@@ -926,206 +763,8 @@ pop_rew:		; v
 	무		;
 	jmp rew
 
-	;; 방향 뒤집기 (ㅊ, 빈 스택/큐)
-refl:			; {? | }
-	brpop1 rew	; ?
-	무		;
-	순		; [D] dc dr
-	푸		; [D] dr dc
-	붏		; [D] dr dc 8
-	푸		; [D] dr 8 dc
-	투		; [D] dr 8-dc
-	푸		; [D] 8-dc dr
-	붏		; [D] 8-dc dr 8
-	푸		; [D] 8-dc 8 dr
-	투		; [D] 8-dc 8-dr
 
-	;; 움직이고 되감기
-rew:			; [?]
-	순		; [D] dc dr
-	뿌		; [D] dc dr dr
-	붐		; [D] dc dr dr 4
-	투		; [D] dc dr dr-4
-	ㅊ rew_horiz	; [D] dc dr
 
-	; 세로로 움직이기
-	숙		; [P] c r
-	뿌		; [P] c r r
-	쑤		; [P] c r
-	숭		; [Q] {w ?* 0 | 0} {2 ?* 0}* 0 <...>
-
-rew_vline:		; [Q] {w ?* 0 | 0} {2 ?* 0}* 0 <...>
-	뿌		; [Q] {w w ?* 0 | 0 0} {2 ?* 0}* 0 <...>
-	쑹		; [Q] {w ?* 0 {2 ?* 0}* 0 <...> w | 0 {2 ?* 0}* 0 <...> 0}
-	ㅊ rew_vnl	; [Q] ?* 0 {2 ?* 0}* 0 <...> w
-	jmp rew_vline
-
-rew_vnl:		; [Q] {2 ?* 0 {2 ?* 0}* 0 | 0} <...>
-	뿌		; [Q] {2 2 ?* 0 {2 ?* 0}* 0 | 0 0} <...>
-	쑹		; [Q] {2 ?* 0 {2 ?* 0}* 0 <...> 2 | 0 <...> 0}
-	ㅊ rew_vwrap	; [Q] ?* 0 {2 ?* 0}* 0 <...> 2
-	수		; lastr
-	북		; lastr 2
-	두		; lastr+2
-	숭		; [Q] ?* 0 {2 ?* 0}* 0 <...> 2
-	jmp rew_vline
-
-rew_vwrap:		; [Q] <...>
-	순		; [D] dc dr
-	뿌		; [D] dc dr dr
-	쑥		; [D] dc dr
-	숙		; [P] c r dr
-	두		; [P] c r+dr
-	붐		; [P] c r+dr 4
-	투		; [P] c r'=r+(dr-4)
-	뿌		; [P] c r' r'
-	쑤		; [P] c r'
-	수		; lastr r'
-	부		; lastr r' 0
-	주		; lastr r'>=0
-	ㅊ rew_vlower	; lastr
-	숙		; [P] c r'
-	뿌		; [P] c r' r'
-	쑤		; [P] c r'
-	수		; lastr r'
-	주		; lastr>=r'
-	ㅊ rew_vupper	;
-	숙		; [P] c r'
-	jmp seek
-
-rew_vlower:		; lastr
-	쑥		;
-	숙		; [P] c r' lastr
-	푸		; [P] c lastr r'
-	무		; [P] c lastr
-	jmp seek
-
-rew_vupper:		;
-	숙		; [P] c r'
-	무		; [P] c
-	부		; [P] c 0
-	jmp seek
-
-	; 가로로 움직이기
-rew_horiz:
-	숙		; [P] c r
-	푸		; [P] r c
-	뿌		; [P] r c c
-	북		; [P] r c c 2
-	투		; [P] r c c-2
-	쑤		; [P] r c
-
-rew_heol:		; [?]
-	숭		; [Q] ?* 0 <...>
-	뿌		; [Q] {v v ?* 0 | 0 0} <...>
-	쑹		; [Q] {v ?* 0 <...> v | 0 <...> 0}
-	ㅊ rew_heof	; [Q] ?* 0 <...> v
-	수		; lastc
-	북		; lastc 2
-	두		; lastc+2
-	jmp rew_heol
-
-rew_heof:		; [Q] {2 ?* 0 {2 ?* 0}* 0 | 0} <...>
-	뿌		; [Q] {2 2 ?* 0 {2 ?* 0}* 0 | 0 0} <...>
-	쑹		; [Q] {2 ?* 0 {2 ?* 0}* 0 <...> 2 | 0 <...> 0}
-	ㅊ rew_hwrap	; [Q] ?* 0 {2 ?* 0}* 0 <...> 2
-rew_hline:		; [Q] {w ?* 0 | 0} {2 ?* 0}* 0 <...>
-	뿌		; [Q] {w w ?* 0 | 0 0} {2 ?* 0}* 0 <...>
-	쑹		; [Q] {w ?* 0 {2 ?* 0}* 0 <...> w | 0 {2 ?* 0}* 0 <...> 0}
-	ㅊ rew_heof	; [Q] ?* 0 {2 ?* 0}* 0 <...> w
-	jmp rew_hline
-
-rew_hwrap:		; [Q] <...>
-	순		; [D] dc dr
-	푸		; [D] dr dc
-	뿌		; [D] dr dc dc
-	쑥		; [D] dr dc
-	푸		; [D] dc dr
-	숙		; [P] r c dc
-	두		; [P] r c+dc
-	붐		; [P] r c+dc 4
-	투		; [P] r c'=c+(dc-4)
-	뿌		; [P] r c' c'
-	쑤		; [P] r c'
-	수		; lastc c'
-	부		; lastc c' 0
-	주		; lastc c'>=0
-	ㅊ rew_hlower	; lastc
-	숙		; [P] r c'
-	뿌		; [P] r c' c'
-	쑤		; [P] r c'
-	수		; lastc c'
-	주		; lastc>=c'
-	ㅊ rew_hupper	;
-	숙		; [P] r c'
-	푸		; [P] c' r
-	jmp seek
-
-rew_hlower:		; lastc
-	쑥		;
-	숙		; [P] r c' lastc
-	푸		; [P] r lastc c'
-	무		; [P] r lastc
-	푸		; [P] lastc r
-	jmp seek
-
-rew_hupper:		;
-	숙		; [P] r c'
-	무		; [P] r
-	부		; [P] r 0
-	푸		; [P] 0 r
-	jmp seek
-
-	; 큐에서 정위치로 되돌아가기
-seek:			; [P] c r
-	뿌		; [P] c r r
-	쑤		; [P] c r
-	숭		; [Q] {2 ?* 0}* 0
-
-seek_row:		; [Q] {2 ?* 0 | 0} <...>
-	쑹		; [Q] {?* 0 <...> 2 | <...> 0}
-	수		; rr
-	뿌		; rr rr
-	ㅊ seek_col	; rr
-	북		; rr 2
-	투		; rr-2
-	숭		; [Q] ?* 0 <...>
-seek_row0:		; [Q] {w ?* 0 | 0} <...>
-	뿌		; [Q] {w w ?* 0 | 0 0} <...>
-	쑹		; [Q] {w ?* 0 <...> w | 0 <...> 0}
-	ㅊ seek_row	; [Q] ?* 0 <...> w
-	jmp seek_row0
-
-seek_col:		; rr
-	무		;
-	숙		; [P] c r
-	푸		; [P] r c
-	뿌		; [P] r c c
-	쑤		; [P] r c
-	푸		; [P] c r
-	숭		; [Q] ?* 0 <...>
-seek_col0:		; [Q] {w ?* 0 | 0} <...>
-	뿌		; [Q] {w w ?* 0 | 0 0} <...>
-	쑤		; [Q] {w ?* 0 | 0} <...>
-	수		; rc w
-	뿌		; rc w w
-	ㅊ seek_eol	; rc w
-	푸		; w rc
-	뿌		; w rc rc
-	ㅊ seek_done	; w rc
-	푸		; rc w
-	무		; rc
-	북		; rc 2
-	투		; rc-2
-	숭		; [Q] {w ?* 0 | 0} <...>
-	쑹		; [Q] {?* 0 <...> w | <...> 0}
-	jmp seek_col0
-
-seek_eol:		; rc w
-	푸		; w rc
-seek_done:		; w rc
-	무		; v=w
-	jmp loop
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

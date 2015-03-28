@@ -284,15 +284,6 @@ r_add:			; v-0xac00 zdelta
 
 	;; 셋업
 setup:
-; temporary for verification
-sel 21
-brpop1 q
-popnum
-sel 0
-push 10
-popchar
-jmp setup
-q: halt
 	; 상태 스택
 	sel 1		; [P]
 	push 0		; [P] 0
