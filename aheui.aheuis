@@ -680,8 +680,8 @@ a1_ops:			; v {n x _ | x #}
 	; 두번째 인자
 	swap		; v {n x _ | x #}
 	brz a2_try	; v x
-	push 2		; v x 2
-	jmp a2_preops	; -> a2_preops2
+	push 2		; v x #
+	jmp a2_ops
 
 a2_try:			; v n x
 	sel 19		; [S] s
@@ -689,16 +689,11 @@ a2_try:			; v n x
 	brz a2_queue	; [S] s
 	sel 5		; [H] <...> # {? _}*
 	brz a2_ok	; [H] <...>
-	push 3		; [H] <...> 3
-	dup		; [H] <...> 3 3
-	push 0		; [H] <...> 3 3 0
-	jmp a2_preops	; -> a2_preops03
-
-a2_ok:			; [H/T] <...> # {? _}* m
-	push 0		; [H/T] <...> # {? _}* m 0
-	dup		; [H/T] <...> # {? _}* m 0 0
-	push 0		; [H/T] <...> # {? _}* m 0 0 0
-	jmp a2_preops	; -> a2_preops00
+	sel 0		; v n x
+	swap		; v x n
+	mov 5		; v x
+	sel 5		; [H] <...> n
+	jmp a2_cleanup
 
 a2_queue:		; [S] s
 	sel 8		; [T] <...> # {? _}*
@@ -710,10 +705,11 @@ a2_qarrange:		; [H] <...> # {? _}*
 	push 2		; [H] <...> #
 	sel 8		; [T] <...> # {? _}*
 	brz a2_ok	; [T] <...>
-	push 2		; [T] <...> 2
-	dup		; [T] <...> 2 2
-	push 0		; [T] <...> 2 2 0
-	jmp a2_preops	; -> a2_preops02
+	sel 0		; v n x
+	swap		; v x n
+	mov 8		; v x
+	sel 8		; [T] <...> n
+	jmp a2_cleanup
 
 a2_qnext:		; [H] <...> # {? _}* ?
 	mov 8		; [H] <...> # {? _}*
@@ -721,49 +717,28 @@ a2_qnext:		; [H] <...> # {? _}* ?
 	mov 8		; [H] <...> # {? _}*
 	jmp a2_qarrange
 
-a2_preops:		; <...> {2 | 0 0 0 | 2 2 0 | 3 3 0}
-	brz a2_preops0	; <...>
-	jmp a2_preops2
-
-a2_preops2:		; v x
-	push 2		; v x #
-	jmp a2_ops
-
-a2_preops0:		; <...> {0 0 | 2 2 | 3 3}
-	brz a2_preops00	; <...> {2 | 3}
-	push 2		; <...> {2 | 3} 2
-	sub		; <...> {0 | 1}
-	brz a2_preops02	; <...>
-	jmp a2_preops03
-
-a2_preops00:		; [H/T] <...> # {? _}* m 0
-	pop		; [H/T] <...> # {? _}* m
-	mov 0		; [H/T] <...> # {? _}*
-	sel 0		; v n x m
-	swap		; v n m x
-	push 0		; v n m x _
-	jmp a2_ops
-
-a2_preops02:		; [T] <...>
-	sel 0		; v n x
-	swap		; v x n
-	mov 8		; v x
-	sel 8		; [T] <...> n
-	jmp a2_cleanup
-
-a2_preops03:		; [H] <...>
-	sel 0		; v n x
-	swap		; v x n
-	mov 5		; v x
-	sel 5		; [H] <...> n
-	jmp a2_cleanup
-
 a2_cleanup:		; [H/T] <...> n
+	push 2		; [H/T] <...> n 2
+	jmp a2_end
+
+a2_ok:			; [H/T] <...> # {? _}* m
+	push 0		; [H/T] <...> # {? _}* m 0
+	jmp a2_end
+
+a2_end:			; [H/T] <...> <...> {0 | 2}
+	brz a2_nocleanup; [H/T] <...> n
 	push 2		; [H/T] <...> n #
 	swap		; [H/T] <...> # n
 	push 0		; [H/T] <...> # n _
 	sel 0		; v x
 	push 2		; v x #
+	jmp a2_ops
+
+a2_nocleanup:		; [H/T] <...> # {? _}* m
+	mov 0		; [H/T] <...> # {? _}*
+	sel 0		; v n x m
+	swap		; v n m x
+	push 0		; v n m x _
 	jmp a2_ops
 
 	; 인자가 둘인 명령
