@@ -1,9 +1,15 @@
 #!/bin/bash
 
+AHEUIPRE=
 case ${1} in
     proto) AHEUI=$(dirname "$0")/ahah;;
     asm) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheuis";;
-    *) echo "Usage: $0 {proto|asm} [testname ...]" >&1; exit 1
+    aheui)
+        trap "rm -f $(dirname "$0")/aheui.aheui.25*" INT EXIT TERM
+        AHEUIPRE="head -n 25 $(dirname "$0")/aheui.aheui > $(dirname "$0")/aheui.aheui.25"
+        AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheui.25"
+    ;;
+    *) echo "Usage: $0 {proto|asm|aheui} [testname ...]" >&1; exit 1
 esac
 
 git submodule init
@@ -23,6 +29,7 @@ for d in $ds; do
         fbase=`basename "$f" .aheui`
         echo -n "  test $fbase"...
         if [ -e "$d/$fbase".out ]; then
+            eval "$AHEUIPRE"
             if [ -e "$d/$fbase".in ]; then
                 #out=`$AHEUI $f < $d/$fbase.in`
                 out=`(cat $f <(echo -ne '\0') $d/$fbase.in) | $AHEUI`
