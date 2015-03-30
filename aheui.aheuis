@@ -759,6 +759,12 @@ a2_ops:			; v {n m x _ | x #}
 	sub		; v {n m _ | #} x x-5
 	brz mul		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
+	push 8
+	push 9
+	add		; v {n m _ | #} x x 17
+	sub		; v {n m _ | #} x x-17
+	brz sub		; v {n m _ | #} x
+	dup		; v {n m _ | #} x x
 	push 3		; v {n m _ | #} x x 3
 	sub		; v {n m _ | #} x x-3
 	brz div		; v {n m _ | #} x
@@ -766,12 +772,6 @@ a2_ops:			; v {n m x _ | x #}
 	push 6		; v {n m _ | #} x x 6
 	sub		; v {n m _ | #} x x-6
 	brz mod		; v {n m _ | #} x
-	dup		; v {n m _ | #} x x
-	push 8
-	push 9
-	add		; v {n m _ | #} x x 17
-	sub		; v {n m _ | #} x x-17
-	brz sub		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
 	push 3
 	push 6
