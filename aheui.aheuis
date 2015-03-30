@@ -765,26 +765,36 @@ a2_ops:			; v {n m x _ | x #}
 	sub		; v {n m _ | #} x x-17
 	brz sub		; v {n m _ | #} x
 	dup		; v {n m _ | #} x x
-	push 3		; v {n m _ | #} x x 3
-	sub		; v {n m _ | #} x x-3
-	brz div		; v {n m _ | #} x
-	dup		; v {n m _ | #} x x
-	push 6		; v {n m _ | #} x x 6
-	sub		; v {n m _ | #} x x-6
-	brz mod		; v {n m _ | #} x
-	dup		; v {n m _ | #} x x
 	push 3
 	push 6
 	mul		; v {n m _ | #} x x 18
 	sub		; v {n m _ | #} x x-18
-	brz swap	; v {n m _ | #} x
+	swap		; v {n m _ | #} x-18 x
+	dup		; v {n m _ | #} x-18 x x
+	push 6		; v {n m _ | #} x-18 x x 6
+	sub		; v {n m _ | #} x-18 x x-6
+	swap		; v {n m _ | #} x-18 x-6 x
+	push 3		; v {n m _ | #} x-18 x-6 x 3
+	sub		; v {n m _ | #} x-18 x-6 x-3
+	brz div		; v {n m _ | #} x-18 x-6
+	brz mod		; v {n m _ | #} x-18
+
+	; ㅍ 바꿔치기 또는 없는 명령
+	swap		; v {n m x-18 _ | x-18 #}
+	brz swap_or_nop	; v x-18
+	pop		; v
+	jmp refl
+
+swap_or_nop:		; v n m x-18
+	brz swap	; v n m
+	jmp swap0
+
+swap:			; v n m
+	swap		; v m n
+swap0:			; v {n m | m n}
+	jmp push2frontx
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	; 없는 명령
-	pop		; v {n m _ | #}
-	brz push2front	; v
-	jmp refl
 
 	; 공통 코드: 스택/큐 뒷꽁무니에 하나 넣기
 push1back:		; ? val
@@ -811,6 +821,32 @@ push2front:		; ? n m
 
 push2frontq:		; [S] s
 	sel 0		; v n m
+	mov 8		; v n
+	push 0		; v n 0
+	mov 8		; v n
+	mov 8		; v
+	push 0		; v 0
+	mov 8		; v
+	pop		;
+	jmp refl
+
+	; push2front의 변형
+push2frontx:		; ? n m
+	sel 19		; [S] s
+	dup		; [S] s s
+	mov 0		; [S] s
+	sel 0		; ? n m s
+	brz push2frontxq; ? n m
+	mov 5		; ? n
+	push 0		; ? n 0
+	mov 5		; ? n
+	mov 5		; ?
+	push 0		; ? 0
+	mov 5		; ?
+	pop		;
+	jmp refl
+
+push2frontxq:		; v n m
 	mov 8		; v n
 	push 0		; v n 0
 	mov 8		; v n
@@ -1071,7 +1107,8 @@ mul0:			; v n m
 	jmp push1back
 
 	;; ㄴ 나눗셈
-div:			; v {n m _ | #} x
+div:			; v {n m _ | #} -15 -3
+	pop		; v {n m _ | #} -15
 	pop		; v {n m _ | #}
 	brz div0	; v
 	jmp refl
@@ -1082,7 +1119,7 @@ div0:			; v n m
 	jmp push1back
 
 	;; ㄹ 나머지
-mod:			; v {n m _ | #} x
+mod:			; v {n m _ | #} -12
 	pop		; v {n m _ | #}
 	brz mod0	; v
 	jmp refl
@@ -1102,16 +1139,6 @@ sub0:			; v n m
 	swap		; v m n
 	sub		; v m/n
 	jmp push1back
-
-	;; ㅍ 바꿔치기
-swap:			; v {n m _ | #} x
-	pop		; v {n m _ | #}
-	brz swap0	; v
-	jmp refl
-
-swap0:			; v n m
-	swap		; v m n
-	jmp push2front
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
