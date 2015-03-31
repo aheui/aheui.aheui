@@ -1,10 +1,16 @@
 #!/bin/bash
 
-AHEUIPRE=
+require_rpaheui() {
+    if [ -z "${RPAHEUI}" ]; then
+        echo You need to set an '${RPAHEUI}' environment variable. >&2
+        exit 1
+    fi
+}
+
 case ${1} in
     proto) AHEUI=$(dirname "$0")/ahah;;
-    asm) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheuis";;
-    aheui) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheui";;
+    asm) require_rpaheui; AHEUI="${RPAHEUI}/aheui-c --no-c $(dirname "$0")/aheui.aheuis";;
+    aheui) require_rpaheui; AHEUI="${RPAHEUI}/aheui-c --no-c $(dirname "$0")/aheui.aheui";;
     *) echo "Usage: $0 {proto|asm|aheui} [testname ...]" >&1; exit 1
 esac
 
@@ -25,7 +31,6 @@ for d in $ds; do
         fbase=`basename "$f" .aheui`
         echo -n "  test $fbase"...
         if [ -e "$d/$fbase".out ]; then
-            eval "$AHEUIPRE"
             if [ -e "$d/$fbase".in ]; then
                 #out=`$AHEUI $f < $d/$fbase.in`
                 out=`(cat $f <(echo -ne '\0') $d/$fbase.in) | $AHEUI`
