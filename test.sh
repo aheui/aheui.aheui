@@ -8,7 +8,7 @@ require_rpaheui() {
 }
 
 case ${1} in
-    proto) AHEUI=$(dirname "$0")/ahah;;
+    proto) AHEUI=$(dirname "$0")/proto;;
     asm) require_rpaheui; AHEUI="${RPAHEUI}/aheui-c --no-c $(dirname "$0")/aheui.aheuis";;
     aheui) require_rpaheui; AHEUI="${RPAHEUI}/aheui-c --no-c $(dirname "$0")/aheui.aheui";;
     *) echo "Usage: $0 {proto|asm|aheui} [testname ...]" >&1; exit 1
