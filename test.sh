@@ -4,11 +4,7 @@ AHEUIPRE=
 case ${1} in
     proto) AHEUI=$(dirname "$0")/ahah;;
     asm) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheuis";;
-    aheui)
-        trap "rm -f $(dirname "$0")/aheui.aheui.25*" INT EXIT TERM
-        AHEUIPRE="head -n 25 $(dirname "$0")/aheui.aheui > $(dirname "$0")/aheui.aheui.25"
-        AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheui.25"
-    ;;
+    aheui) AHEUI="$(dirname "$0")/../rpaheui/aheui-c $(dirname "$0")/aheui.aheui";;
     *) echo "Usage: $0 {proto|asm|aheui} [testname ...]" >&1; exit 1
 esac
 

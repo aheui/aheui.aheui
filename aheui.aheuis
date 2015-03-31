@@ -1273,7 +1273,7 @@ m_redo:			; n delta -1
 	push 0		; 0
 	mov 5		;
 	push 3		; 3
-	sel 4		; [A] -delta
+	sel 6		; [A] -delta
 	jmp m_forward
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
